@@ -49,34 +49,60 @@ const cardArray = [
     },
 ]
 
+// shuffle the cardArray
 cardArray.sort(() => 0.5 - Math.random());
 
-
+// grab the #grid div, remember as gridDisplay
 const gridDisplay = document.querySelector('#grid');
+
+// Array for the cards chosen by the player
+let cardsChosen = [];
+
+let cardsChosenIds = [];
+
+const cardsWon = [];
 
 function createBoard(){
     for(let i = 0; i < cardArray.length; i++){
         const card = document.createElement('img');
         card.setAttribute('src', 'images/blank.jpg');
-        card.setAttribute('data-id', i);
+        card.setAttribute('array-id', i);
         card.addEventListener('click', flipCard);
         gridDisplay.appendChild(card);
     }
 }
 
-createBoard();
-
-
-// turn card: read data-id i, find associated image
-// needs to listen to 2 clicks. How to do that? 
-// if two cards similar, turn white. How to do that? They do not have matching IDs!
-
 function flipCard(){
-    let cardId = this.getAttribute('data-id');
+    let cardId = this.getAttribute('array-id');
     console.log('clicked', cardId, cardArray[cardId].name);
+    cardsChosen.push(cardArray[cardId].name);
+    cardsChosenIds.push(cardId);
+    console.log(cardsChosen, cardsChosenIds);
+    this.setAttribute('src', cardArray[cardId].img);
+    if(cardsChosen.length === 2){
+        setTimeout(checkMatch, 500);
+    }
+}
+
+function checkMatch(){
+    const cards = document.querySelectorAll('img');
+    console.log('checking for match');
+    if (cardsChosen[0] == cardsChosen[1]) {
+        console.log('Match found');
+        
+
+        cards[cardsChosenIds[0]].setAttribute('src', 'images/solved.jpg');
+        cards[cardsChosenIds[1]].setAttribute('src', 'images/solved.jpg');
+        cards[cardsChosenIds[0]].removeEventListener('click', flipCard);
+        cards[cardsChosenIds[1]].removeEventListener('click', flipCard);
+        cardsWon.push(cardsChosen);
+    }
+    cardsChosen = [];
+    cardsChosenIds = [];
 }
 
 
 
 
 
+createBoard();

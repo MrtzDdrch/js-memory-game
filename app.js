@@ -62,6 +62,8 @@ let cardsChosenIds = [];
 
 const cardsWon = [];
 
+const resultDisplay = document.querySelector('#result');
+
 function createBoard(){
     for(let i = 0; i < cardArray.length; i++){
         const card = document.createElement('img');
@@ -86,23 +88,34 @@ function flipCard(){
 
 function checkMatch(){
     const cards = document.querySelectorAll('img');
+    const optionOneId = cardsChosenIds[0];
+    const optionTwoId = cardsChosenIds[1];
     console.log('checking for match');
+
+    if (optionOneId == optionTwoId) {
+        cards[optionOneId].setAttribute('src', 'images/blank.jpg');
+        cards[optionTwoId].setAttribute('src', 'images/blank.jpg');
+    }
+
     if (cardsChosen[0] == cardsChosen[1]) {
         console.log('Match found');
-        
 
-        cards[cardsChosenIds[0]].setAttribute('src', 'images/solved.jpg');
-        cards[cardsChosenIds[1]].setAttribute('src', 'images/solved.jpg');
-        cards[cardsChosenIds[0]].removeEventListener('click', flipCard);
-        cards[cardsChosenIds[1]].removeEventListener('click', flipCard);
+        cards[optionOneId].setAttribute('src', 'images/solved.jpg');
+        cards[optionOneId].removeEventListener('click', flipCard);
+        cards[optionTwoId].setAttribute('src', 'images/solved.jpg');        
+        cards[optionTwoId].removeEventListener('click', flipCard);
         cardsWon.push(cardsChosen);
+    } else {
+        cards[optionOneId].setAttribute('src', 'images/blank.jpg');
+        cards[optionTwoId].setAttribute('src', 'images/blank.jpg');
     }
+    resultDisplay.innerHTML = cardsWon.length;
     cardsChosen = [];
     cardsChosenIds = [];
+
+    if (cardsWon.length == cardArray.length/2) {
+        resultDisplay.innerHTML = "All doggos found!";
+    }
 }
-
-
-
-
 
 createBoard();
